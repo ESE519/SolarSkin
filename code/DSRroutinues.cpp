@@ -17,6 +17,7 @@
 uint8_t uniqueIDsRREQ[MaxuIDTrack] = {0};
 uint8_t uniqueIDsRSAL[MaxuIDTrack] = {0};
 uint8_t cache[MaxHopsPossible] = {0}; //store first as own address
+uint16_t sensorVal[2]={0x42,0x42}; 
 
 void RxPacketProcess(uint8_t *pack,uint8_t len){
 	uint8_t i, j, len2;
@@ -29,27 +30,21 @@ void RxPacketProcess(uint8_t *pack,uint8_t len){
 	switch(pack[3])
 	{
 		case RREQ:
-			RouteRequestRx(temp,len2);
-			break;
+			RouteRequestRx(temp,len2);	break;
 		case RREP:
-			RouteReplyRx(temp,len2);
-			break;
+			RouteReplyRx(temp,len2);	break;
 		case RERR:
 			break;
 		case DATA:
-			DataRx(temp,len2);
-			break;
+			DataRx(temp,len2);			break;
 		case DATR:
-			break;
+			DatrRx(temp, len2);			break;
 		case RCUP:
-			RcupRx(temp,len2);
-			break;
+			RcupRx(temp,len2);			break;
 		case RSAL:
-			RsalRx(temp,len2);
-			break;
+			RsalRx(temp,len2);			break;
 		case DACK:
-			DackRx(temp,len2);
-			break;
+			DackRx(temp,len2);			break;
 		case default:
 			break;
 	}
@@ -149,6 +144,17 @@ void RouteReplyTx(uint8_t *rrep,uint8_t len, uint8_t timeOff){
 	return;
 }
 
+void DataInitiate(){
+	uint8_t i,j;
+	for(i=0;i<MaxHopsPossible;i++){if(cache[i] == Gateway){break;}}
+	uint8_t temp[i+4];
+	temp[0]=TTL+1;
+	for(j=1;j<i+2;j++){temp[j]=cache[j-1];}
+	data[j++]=sensorVal[0];
+	data[j]=sensorVal[1];
+	DataTx(temp,i+4);
+}
+
 void DataTx(uint8_t *data,uint8_t len){
 	if(data[0]<2){return;}
 	uint8_t temp[len+4],i,j;
@@ -226,6 +232,12 @@ void RsalTx(uint8_t *rsal, uint8_t len){
 	TxQueueAdd(temp,len+4,0xFF);
 	return;
 }
+
+void Rsal_Initiate(dest){
+
+}
+
+
 
 void TxQueueAdd(){}
 
