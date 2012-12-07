@@ -103,14 +103,14 @@ void rf_set_channel(uint8_t channel)
 void rf_addr_decode_enable(void)
 {
     uint8_t rxmcr = mrf_read_short(RXMCR);
-    mrf_write_short(RXMCR, rxmcr &~(1 << 0));   // Set to ignore address field
+    mrf_write_short(RXMCR, rxmcr &~(1 << 0));   // CLEAR to USE address field
 }
 
 
 void rf_addr_decode_disable(void)
 {
     uint8_t rxmcr = mrf_read_short(RXMCR);
-    mrf_write_short(RXMCR, rxmcr | (1 << 0));    // Set to use address field
+    mrf_write_short(RXMCR, rxmcr | (1 << 0));    // SET to IGNORE address field
 }
 
 
@@ -376,13 +376,16 @@ uint8_t rf_tx_packet(RF_TX_INFO *pRTI)
     
     tx_status_ready = 0;
     mrf_write_short(TXNCON, auto_ack_enable ? 0x05 : 0x01);  // Send contents of TXNFIFO as packet
-    
+    //putchar(auto_ack_enable);
     // Wait for Tx to finish
     while(!tx_status_ready);
     wait_ms(50);
     success = 1;
+		//putchar(auto_ack_enable);
     if(auto_ack_enable || pRTI->ackRequest) {
-        success = !(mrf_read_short(TXSTAT) & 0x01);
+        uint8_t k = mrf_read_short(TXSTAT);
+				success = !(k & 0x01);
+			//printf("ACK%c",k);
     }
     
 		//printf("tx_pkt success = %d\r\n",success);

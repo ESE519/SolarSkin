@@ -1,4 +1,4 @@
-.\build\hop_int.o: ..\..\proj_prac\hop_int.cpp
+.\build\hop_int.o: ..\hop_int.cpp
 .\build\hop_int.o: .\mbed\nrk.h
 .\build\hop_int.o: .\mbed\nrk_cpu.h
 .\build\hop_int.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h

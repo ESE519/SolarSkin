@@ -1,4 +1,4 @@
-.\build\hop_int_gate.o: ..\..\proj_prac\hop_int_gate.cpp
+.\build\hop_int_gate.o: ..\hop_int_gate.cpp
 .\build\hop_int_gate.o: .\mbed\nrk.h
 .\build\hop_int_gate.o: .\mbed\nrk_cpu.h
 .\build\hop_int_gate.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h

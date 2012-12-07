@@ -29,6 +29,9 @@
 #define Gateway 01
 #define arraysize 128
 #define max_storage 10
+
+uint8_t pTxQ[max_storage][arraysize], pTxQlen[max_storage]={0}, pTxQdes[max_storage]={0}, pTxQsen[max_storage]={0};
+
 uint8_t *local_rx_buf,pkt_length[max_storage];
 uint8_t length1,trans_flag=0,pkt_pointer=0,packet_in_que=0,trans_ptr=0;
 uint8_t pkt_store_data[max_storage][128];
@@ -64,7 +67,7 @@ int main(void)
 	    nrk_setup_ports();
 			nrk_init();
 			bmac_task_config();
-		  bmac_init (10);
+		  bmac_init (1);
 			nrk_create_taskset();
 		  nrk_start();
 			return 0;
@@ -92,17 +95,14 @@ void RxPacketProcess(uint8_t *pack,uint8_t len){
 }
 
 void TxQueueAdd(uint8_t *px,uint8_t len,uint8_t dest){
-if(pkt_pointer>9){
-pkt_pointer=0;
-}
-for(int i=0;i<len;i++){
-pkt_store_data[pkt_pointer][i]=px[i];
-}
-pkt_destination[pkt_pointer]=dest;
-pkt_length[pkt_pointer]=len;
-pkt_pointer++;
-packet_in_que++;
-
+	uint8_t i,j;
+	for(i=0;i<max_storage;i++){pTxQsen[i]==0;break;}
+	if(i==10){putchar(0x42);return;}
+	for(j=0;j<len;j++){pTxQ[i][j]=px[j];}
+	pTxQdes[i]=dest;
+	pTxQlen[i]=len;
+	pTxQsen[i]=1;
+	return;
 }
  void RouteRequestTx(uint8_t *rreq,uint8_t len){
 	if(rreq[0]<2){return;}
@@ -201,33 +201,22 @@ void rx_task ()
 {
   uint8_t i, len, rssi;
   int8_t val;
-	//char *local_rx_buf;
   nrk_time_t check_period;
-	
-  //printf ("rx_task PID=%d\r\n", nrk_get_pid ());
 	bmac_set_cca_thresh(DEFAULT_BMAC_CCA); 
   bmac_rx_pkt_set_buffer ((char*)rx_buf, RF_MAX_PAYLOAD_SIZE);
   while (1) {
-    // Wait until an RX packet is received
-    val = bmac_wait_until_rx_pkt ();
-		//printf("Hi..\n");
-    // Get the RX packet 
-    nrk_led_set (ORANGE_LED);
+		val = bmac_wait_until_rx_pkt ();
+		nrk_led_set (ORANGE_LED);
     (char*)local_rx_buf = bmac_rx_pkt_get (&len, &rssi);
-	for(i=0;i<len;i++){
-	printf("%c",local_rx_buf[i]);
-	}
-	RxPacketProcess(local_rx_buf,len);
-	nrk_led_clr (ORANGE_LED);
+		for(i=0;i<len;i++){putchar(local_rx_buf[i]);}
+		RxPacketProcess(local_rx_buf,len);
+		nrk_led_clr(ORANGE_LED);
     bmac_rx_pkt_release ();
     nrk_wait_until_next_period ();
   }
 }
-uint8_t ctr_cnt[4];
-/*
-void inter_tx_task ()
-{
-  uint8_t j, i, val, len, cnt;
+void tx_task (){
+	uint8_t j, i, val, len, cnt;
   nrk_sig_t tx_done_signal;
   nrk_sig_mask_t ret;
   nrk_time_t r_period;
@@ -236,89 +225,43 @@ void inter_tx_task ()
   tx_done_signal = bmac_get_tx_done_signal ();
   nrk_signal_register (tx_done_signal);
   cnt = 0;
-  while (1) {
-		//RouteDiscovery();
-		//printf("%d",packet_in_que);
-	if(packet_in_que>0){
-    bmac_addr_decode_disable();
-    bmac_addr_decode_set_my_mac(MyOwnAddress);
-	for(i=0;i<pkt_length[pkt_pointer-1];i++){
-    tx_buf[i]=pkt_store_data[pkt_pointer-1][i];
-		//printf("%c",tx_buf[i]);
-	}
-    nrk_led_set (GREEN_LED);
-	bmac_auto_ack_enable();
-	if(pkt_destination[pkt_pointer-1]==0xFF){
-    bmac_addr_decode_dest_mac(0xFFFF);  // 0xFFFF is broadcast
-	}
-	else{
-	bmac_addr_decode_dest_mac(pkt_destination[pkt_pointer-1]);
-	}
-  val=bmac_tx_pkt((char*)tx_buf,pkt_length[pkt_pointer-1] );
-	packet_in_que--;
-	cnt++;
-    //printf("Tx task sent data!\r\n");
-    nrk_led_clr (GREEN_LED);
-	  //printf("tx_task PID=%d\r\n", nrk_get_pid ());
-    nrk_wait_until_next_period ();
-  }
-  }
-}*/
-void tx_task ()
-{
-  uint8_t j, i, val, len, cnt;
-  nrk_sig_t tx_done_signal;
-  nrk_sig_mask_t ret;
-  nrk_time_t r_period;
-  while (!bmac_started ())
-  nrk_wait_until_next_period ();
-  tx_done_signal = bmac_get_tx_done_signal ();
-  nrk_signal_register (tx_done_signal);
-  cnt = 0;
-  while (1) {
-	if(packet_in_que>0){
-		//RouteDiscovery();
-		if(trans_ptr>max_storage-1){
-			trans_ptr=0;}
-    bmac_addr_decode_enable();
-    bmac_addr_decode_set_my_mac(MyOwnAddress);
-	for(i=0;i<pkt_length[trans_ptr];i++){
-    tx_buf[i]=pkt_store_data[trans_ptr][i];
-		//printf("%c",tx_buf[i]);
-	}
-    nrk_led_set (GREEN_LED);
-	bmac_auto_ack_enable();
-	if(pkt_destination[trans_ptr]==0xFF){
-    bmac_addr_decode_dest_mac(0xFFFF);  // 0xFFFF is broadcast
-	}
-	else{
-	bmac_addr_decode_dest_mac(pkt_destination[trans_ptr]);
-	}
-    val=bmac_tx_pkt((char*)tx_buf,pkt_length[trans_ptr] );
+  bmac_addr_decode_enable();
+  bmac_addr_decode_set_my_mac(MyOwnAddress);
 	
-	packet_in_que--;
-	trans_ptr++;
-	cnt++;
-    //printf("Tx task sent data!\r\n");
-    nrk_led_clr (GREEN_LED);
-	//printf("tx_task PID=%d\r\n", nrk_get_pid ());
-}  
-  nrk_wait_until_next_period ();
-  
-  }
+	while (1) {
+		//DataInitiate();
+		nrk_led_set (GREEN_LED);
+		for(i=0;i<max_storage;i++){
+			bmac_addr_decode_enable();
+			bmac_addr_decode_set_my_mac(MyOwnAddress);
+			bmac_auto_ack_enable();
+			if(pTxQsen[i]!=0){
+				bmac_addr_decode_enable();
+				bmac_addr_decode_set_my_mac(MyOwnAddress);
+				bmac_auto_ack_disable();
+				for(j=0;j<pTxQlen[i];j++){tx_buf[j]=pTxQ[i][j];}
+				if(pTxQdes[i]==0xFF){bmac_addr_decode_dest_mac(0xFFFF);}
+				else{bmac_addr_decode_dest_mac(pTxQdes[i]);}
+				val=bmac_tx_pkt((char*)tx_buf,pTxQlen[i]);
+				pTxQsen[i] = 0;
+				pTxQdes[i] = 0;
+				pTxQlen[i] = 0; 
+			}
+		}
+		nrk_led_clr (GREEN_LED);
+		nrk_wait_until_next_period ();
+	}
 }
-
-void nrk_create_taskset ()
-{
+void nrk_create_taskset (){
 
 
   RX_TASK.task = rx_task;
   nrk_task_set_stk( &RX_TASK, rx_task_stack, NRK_APP_STACKSIZE);
-  RX_TASK.prio = 2;
+  RX_TASK.prio = 3;
   RX_TASK.FirstActivation = TRUE;
   RX_TASK.Type = BASIC_TASK;
   RX_TASK.SchType = PREEMPTIVE;
-  RX_TASK.period.secs = 1;
+  RX_TASK.period.secs = 2;
   RX_TASK.period.nano_secs = 0;
   RX_TASK.cpu_reserve.secs = 1;
   RX_TASK.cpu_reserve.nano_secs = 500 * NANOS_PER_MS;
@@ -332,7 +275,7 @@ void nrk_create_taskset ()
   TX_TASK.FirstActivation = TRUE;
   TX_TASK.Type = BASIC_TASK;
   TX_TASK.SchType = PREEMPTIVE;
-  TX_TASK.period.secs = 1;
+  TX_TASK.period.secs = 5;
   TX_TASK.period.nano_secs = 0;
   TX_TASK.cpu_reserve.secs = 1;
   TX_TASK.cpu_reserve.nano_secs = 500 * NANOS_PER_MS;

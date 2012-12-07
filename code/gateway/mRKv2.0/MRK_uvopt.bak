@@ -1841,12 +1841,12 @@
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>23</ColumnNumber>
+      <ColumnNumber>46</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>216</TopLine>
-      <CurrentLine>283</CurrentLine>
+      <TopLine>182</TopLine>
+      <CurrentLine>279</CurrentLine>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\proj_prac\hop_int_gate.cpp</PathWithFileName>
+      <PathWithFileName>..\hop_int_gate.cpp</PathWithFileName>
       <FilenameWithoutPath>hop_int_gate.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
