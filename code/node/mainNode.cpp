@@ -51,6 +51,7 @@ void RouteDiscovery();
 void DataInitiate();
 void DataTx(uint8_t *data,uint8_t len, uint8_t flag);
 void DataRx(uint8_t *data, uint8_t len);
+void DackTx(uint8_t dest);
 void DackRx(uint8_t *d, uint8_t len);
 void RsalRx(uint8_t *rsal,uint8_t len);
 void RsalTx(uint8_t *rsal, uint8_t len, uint8_t flag);
@@ -104,6 +105,8 @@ void RxPacketProcess(uint8_t *pack,uint8_t len){
 		case DACK:
 			DackRx(temp,len2);
 			break;
+		case RSAL:
+			RsalRx(temp,len2);
 	  default:
 			break;
 	}
@@ -172,7 +175,6 @@ void DataTx(uint8_t *data,uint8_t len,uint8_t flag){
 
 void DataRx(uint8_t *data, uint8_t len){
 	uint8_t i,j ;
-	i=1;j=1;
 	for(i=2;i<len;i++){if(data[i]==MyOwnAddress){break;}}
 	for(j=2;j<len;j++){if(data[j]==Gateway){break;}}
 	DackTx(data[i-1]);

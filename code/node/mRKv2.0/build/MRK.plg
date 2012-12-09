@@ -4959,3 +4959,78 @@ User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
 Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
 Finished: 0 information, 0 warning and 1 error messages.
 ".\build\MRK.axf" - 0 Error(s), 0 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(96): error:  #20: identifier "RouteRequestRx" is undefined
+..\mainNode.cpp(99): error:  #20: identifier "RouteReplyRx" is undefined
+..\mainNode.cpp(102): error:  #20: identifier "DataRx" is undefined
+..\mainNode.cpp(105): error:  #20: identifier "DackRx" is undefined
+..\mainNode.cpp(109): error:  #29: expected an expression
+..\mainNode.cpp(110): error:  #18: expected a ")"
+..\mainNode.cpp(108): error:  #20: identifier "RsalRx" is undefined
+..\mainNode.cpp(156): error:  #20: identifier "DataTx" is undefined
+..\mainNode.cpp(226): error:  #20: identifier "RouteReplyTx" is undefined
+..\mainNode.cpp(238): error:  #20: identifier "RouteReplyTx" is undefined
+..\mainNode.cpp(251): error:  #20: identifier "RouteReplyTx" is undefined
+..\mainNode.cpp(303): warning:  #1441-D: nonstandard cast on lvalue
+..\mainNode.cpp(361): error:  #20: identifier "RsalInitiate" is undefined
+..\mainNode.cpp(426): error:  #20: identifier "RsalTx" is undefined
+Target not created
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(55): error:  #130: expected a "{"
+..\mainNode.cpp(77): warning:  #12-D: parsing restarts here after previous syntax error
+..\mainNode.cpp(82): error:  #20: identifier "nrk_create_taskset" is undefined
+..\mainNode.cpp(84): error:  #120: return value type does not match the function type
+..\mainNode.cpp(106): error:  #20: identifier "DackRx" is undefined
+..\mainNode.cpp(110): error:  #29: expected an expression
+..\mainNode.cpp(111): error:  #18: expected a ")"
+..\mainNode.cpp(109): error:  #20: identifier "RsalRx" is undefined
+..\mainNode.cpp(135): error:  #247: function "DackTx" has already been defined
+..\mainNode.cpp(300): error:  #20: identifier "rx_buf" is undefined
+..\mainNode.cpp(304): warning:  #1441-D: nonstandard cast on lvalue
+..\mainNode.cpp(330): error:  #20: identifier "tx_buf" is undefined
+..\mainNode.cpp(333): error:  #20: identifier "tx_buf" is undefined
+..\mainNode.cpp(362): error:  #20: identifier "RsalInitiate" is undefined
+..\mainNode.cpp(378): error:  #20: identifier "tx_buf" is undefined
+..\mainNode.cpp(381): error:  #20: identifier "tx_buf" is undefined
+..\mainNode.cpp(427): error:  #20: identifier "RsalTx" is undefined
+..\mainNode.cpp(452): error:  #20: identifier "RX_TASK" is undefined
+..\mainNode.cpp(453): error:  #20: identifier "rx_task_stack" is undefined
+..\mainNode.cpp(466): error:  #20: identifier "TX_TASK" is undefined
+..\mainNode.cpp(467): error:  #20: identifier "tx_task_stack" is undefined
+..\mainNode.cpp(480): error:  #20: identifier "INTER_TX_TASK" is undefined
+..\mainNode.cpp(481): error:  #20: identifier "inter_tx_task_stack" is undefined
+Target not created
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(110): error:  #29: expected an expression
+..\mainNode.cpp(111): error:  #18: expected a ")"
+..\mainNode.cpp(111): error:  #165: too few arguments in function call
+..\mainNode.cpp(304): warning:  #1441-D: nonstandard cast on lvalue
+Target not created
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(304): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32570 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+linking...
+Program Size: Code=32570 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 0 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(303): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32570 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
