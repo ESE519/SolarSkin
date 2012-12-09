@@ -5034,3 +5034,132 @@ User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
 Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
 Finished: 0 information, 0 warning and 1 error messages.
 ".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(303): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32570 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(303): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32566 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(303): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32570 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(304): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32586 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(304): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32586 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(304): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32586 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(303): error:  #20: identifier "nrk_led_clear" is undefined
+..\mainNode.cpp(306): warning:  #1441-D: nonstandard cast on lvalue
+Target not created
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(306): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32630 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(306): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32626 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+linking...
+Program Size: Code=32626 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 0 Warning(s).
+Build target 'mbed NXP LPC1768'
+linking...
+Program Size: Code=32626 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 0 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(306): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32630 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(306): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32630 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(306): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32622 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(306): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32622 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(306): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32622 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(306): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32618 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(306): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32622 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(306): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=32622 RO-data=1546 RW-data=340 ZI-data=4160  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).

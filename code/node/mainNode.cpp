@@ -13,7 +13,7 @@
 #include "bmac.h"
 
 // Only require MAC address for address decode 
-#define MyOwnAddress 0x09
+#define MyOwnAddress 0x07
 #define MaxHopsPossible 10
 #define TTL 5
 #define MaxuIDTrack 10
@@ -30,13 +30,14 @@
 #define szMax 32
 #define queMax 10
 #define RSSIThresh 180
-
-uint8_t pLen[queMax]={0},ipLen[queMax]={0},pDes[queMax]={0},ipDes[queMax]={0},pPtr=0,ipPtr=0;
-uint8_t pDat[queMax][szMax]={0},ipDat[queMax][szMax]={0};
-uint8_t pQue=0,txPtr=0,ipQue=0,itxPtr=0,iFlag=0;
+#define updateCntMax 4
+#define rDiscCntMax 4
+uint8_t pLen[queMax]={0},ipLen[queMax]={0},apLen[queMax],={0},pDes[queMax]={0},ipDes[queMax]={0},apDes[queMax]={0},pPtr=0,ipPtr=0,apPtr=0;
+uint8_t pDat[queMax][szMax]={0},ipDat[queMax][szMax]={0},apDat[queMax][szMax]={0};
+uint8_t pQue=0,txPtr=0,ipQue=0,itxPtr=0,apQue=0,atxPtr=0;
 uint8_t uniqueIDsRREQ[MaxuIDTrack] = {0}, uniqueIDsRSAL[MaxuIDTrack] = {0};
 uint8_t ackTrack[MaxuIDTrack] = {0}, ackTrackS[MaxuIDTrack] = {0}, ackTrackR[MaxuIDTrack] = {0};
-uint8_t updateCnt=2;
+uint8_t updateCnt=updateCntMax, rDiscCnt=0;
 
 uint8_t cache[MaxHopsPossible] = {0}; //store first as own address
 
@@ -68,6 +69,10 @@ void tx_task(void);
 nrk_task_type INTER_TX_TASK;
 NRK_STK inter_tx_task_stack[NRK_APP_STACKSIZE];
 void inter_tx_task(void);
+
+nrk_task_type ACK_TX_TASK;
+NRK_STK ack_tx_task_stack[NRK_APP_STACKSIZE];
+void ack_tx_task(void);
 
 void nrk_create_taskset();
 
@@ -239,7 +244,6 @@ void RouteRequestRx(uint8_t *rreq, uint8_t len){
 			return;
 		}
 	}
-	
 	//broadcast the packet forward 
 	RouteRequestTx(rreq,len);
 	return;
@@ -298,7 +302,9 @@ void rx_task (){
   bmac_set_cca_thresh(DEFAULT_BMAC_CCA); 
 	bmac_rx_pkt_set_buffer ((char*)rx_buf, RF_MAX_PAYLOAD_SIZE);
 	while (1) {
-    bmac_wait_until_rx_pkt();
+    if(cache[0]==MyOwnAddress){nrk_led_set(RED_LED);}
+		else{nrk_led_clr(RED_LED);}
+		bmac_wait_until_rx_pkt();
     nrk_led_set(ORANGE_LED);
     (char*)local_rx_buf = bmac_rx_pkt_get (&len, &rssi);
 		if(rssi>RSSIThresh){
@@ -324,7 +330,7 @@ void inter_tx_task (){
 			if(itxPtr>queMax-1){itxPtr=0;}
 			bmac_addr_decode_enable();
 			bmac_addr_decode_set_my_mac(MyOwnAddress);
-			nrk_led_set (BLUE_LED);
+			nrk_led_set(BLUE_LED);
 			//bmac_auto_ack_enable();
 			for(i=0;i<ipLen[itxPtr];i++){tx_buf[i]=ipDat[itxPtr][i];}
 			if(ipDes[itxPtr]==0xFF){bmac_addr_decode_dest_mac(0xFFFF);}
@@ -332,7 +338,7 @@ void inter_tx_task (){
 			bmac_tx_pkt((char*)tx_buf,ipLen[itxPtr]);
 			ipQue--;
 			itxPtr++;
-			nrk_led_clr (BLUE_LED);
+			nrk_led_clr(BLUE_LED);
 		}  
 		nrk_wait_until_next_period ();
   }
@@ -349,30 +355,40 @@ void tx_task (){
   bmac_addr_decode_set_my_mac(MyOwnAddress);
 	while (1) {
 		if(updateCnt==0){
-			updateCnt = 2;
+			updateCnt = updateCntMax;
 			for(i=0;i<MaxuIDTrack;i++){uniqueIDsRREQ[i]=0;}
 			for(i=0;i<MaxuIDTrack;i++){uniqueIDsRSAL[i]=0;}
-			for(i=0;i<MaxuIDTrack;i++){if(ackTrackR[i]==ackTrackS[i]){ackTrackR[i]=0;ackTrackS[i]=0;ackTrack[i]=0;}}
+			for(i=0;i<MaxuIDTrack;i++){
+				if(ackTrackR[i]==ackTrackS[i]){
+					ackTrackR[i]=0;
+					ackTrackS[i]=0;
+					ackTrack[i]=0;
+				}
+			}
 			for(i=0;i<MaxuIDTrack;i++){
 				if(ackTrack[i]!=0){
 					if(cache[1]==ackTrack[i]){
 						cache[0]=0;
 					}
-					RsalInitiate(ackTrack[i]);
-					ackTrack[i]=0;
 					ackTrackS[i]=0;
 					ackTrackR[i]=0;
+					RsalInitiate(ackTrack[i]);
+					ackTrack[i]=0;
 				}
 			}
 			for(i=0;i<MaxuIDTrack;i++){ackTrack[i]=ackTrackS[i];}
 		}
 		else{updateCnt--;}
-		if(cache[0]==0){RouteDiscovery();}
-		else{DataInitiate();}
+		if(cache[0]==0){
+			if(rDiscCnt==0){RouteDiscovery();rDiscCnt=rDiscCntMax;}
+			else{rDiscCnt--;}
+		}
+		else{DataInitiate();rDiscCnt=0;}
 		if(pQue>0){
 			if(txPtr>queMax-1){txPtr=0;}
 			bmac_addr_decode_enable();
 			bmac_addr_decode_set_my_mac(MyOwnAddress);
+			nrk_led_set(GREEN_LED);
 			//bmac_auto_ack_enable();
 			for(i=0;i<pLen[txPtr];i++){tx_buf[i]=pDat[txPtr][i];}
 			if(pDes[txPtr]==0xFF){bmac_addr_decode_dest_mac(0xFFFF);}
@@ -382,7 +398,7 @@ void tx_task (){
 			putchar(pDes[txPtr]);
 			pQue--;
 			txPtr++;
-			nrk_led_clr (GREEN_LED);
+			nrk_led_clr(GREEN_LED);
 		}  
 		nrk_wait_until_next_period ();
   }
@@ -390,17 +406,6 @@ void tx_task (){
 
 void RsalRx(uint8_t *rsal,uint8_t len){
 	uint8_t i,j;
-	//Check if the unique ID packet has already been seen recently.
-	for(i=0;i<MaxuIDTrack;i++)
-	{
-		if(rsal[1] == uniqueIDsRSAL[i]){return;}
-	}
-	//Add it to unique ID
-	for(i=0;i<MaxuIDTrack;i++)
-	{
-		if(uniqueIDsRSAL[i]==0){uniqueIDsRSAL[i]=rsal[1];break;}
-	}
-
 	for(i=1;i<MaxHopsPossible;i++)
 	{
 		if(cache[i]==rsal[1])
@@ -423,6 +428,16 @@ void RsalRx(uint8_t *rsal,uint8_t len){
 			}
 		}
 	}
+	//Check if the unique ID packet has already been seen recently.
+	for(i=0;i<MaxuIDTrack;i++)
+	{
+		if(rsal[1] == uniqueIDsRSAL[i]){return;}
+	}
+	//Add it to unique ID
+	for(i=0;i<MaxuIDTrack;i++)
+	{
+		if(uniqueIDsRSAL[i]==0){uniqueIDsRSAL[i]=rsal[1];break;}
+	}
 	RsalTx(rsal,len,1);
 	return;
 }
@@ -430,7 +445,7 @@ void RsalTx(uint8_t *rsal, uint8_t len, uint8_t flag){
 	if(rsal[0]<2){return;}
 	uint8_t temp[szMax],i,j;
 	temp[0]=0x7E;
-	temp[1]=len;
+	temp[1]=len+1;
 	temp[2]=rsal[0]-1;
 	temp[3]=RSAL;
 	j=1;
@@ -444,7 +459,7 @@ void RsalInitiate(uint8_t dest){
 	temp[0]=TTL+1;
 	temp[1]=MyOwnAddress;
 	temp[2]=dest;
-	RsalTx(temp,3,1);
+	RsalTx(temp,3,0);
 }
 
 void nrk_create_taskset (){
