@@ -67,12 +67,6 @@ uint8_t tx_buf[RF_MAX_PAYLOAD_SIZE];
 uint8_t rx_buf[RF_MAX_PAYLOAD_SIZE];
 
 int main(void){
-	cache[0]=0x09;
-	cache[1]=0x07;
-	cache[2]=0x08;
-	cache[3]=0x06;
-	cache[4]=0x01;
-	
 	nrk_setup_ports();
 	nrk_init();
 	bmac_task_config();

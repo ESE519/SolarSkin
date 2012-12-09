@@ -75,7 +75,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>fromelf --bin -o G:\@L.bin !L</UserProg1Name>
+            <UserProg1Name>fromelf --bin -o F:\@L.bin !L</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -518,9 +518,9 @@
               <FilePath>.\mrk_uvision_lpc1768\mrk\NanoRk\src\radio\mrf24j40\source\MRF24J40.cpp</FilePath>
             </File>
             <File>
-              <FileName>hop_int.cpp</FileName>
+              <FileName>mainNode.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\hop_int.cpp</FilePath>
+              <FilePath>..\mainNode.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -1040,9 +1040,9 @@
               <FilePath>.\mrk_uvision_lpc1768\mrk\NanoRk\src\radio\mrf24j40\source\MRF24J40.cpp</FilePath>
             </File>
             <File>
-              <FileName>hop_int.cpp</FileName>
+              <FileName>mainNode.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\hop_int.cpp</FilePath>
+              <FilePath>..\mainNode.cpp</FilePath>
             </File>
           </Files>
         </Group>
