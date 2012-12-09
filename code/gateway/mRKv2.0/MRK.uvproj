@@ -518,9 +518,9 @@
               <FilePath>.\mrk_uvision_lpc1768\mrk\NanoRk\src\radio\mrf24j40\source\MRF24J40.cpp</FilePath>
             </File>
             <File>
-              <FileName>hop_int_gate.cpp</FileName>
+              <FileName>mainGateway.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\hop_int_gate.cpp</FilePath>
+              <FilePath>..\mainGateway.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -1040,9 +1040,9 @@
               <FilePath>.\mrk_uvision_lpc1768\mrk\NanoRk\src\radio\mrf24j40\source\MRF24J40.cpp</FilePath>
             </File>
             <File>
-              <FileName>hop_int_gate.cpp</FileName>
+              <FileName>mainGateway.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\hop_int_gate.cpp</FilePath>
+              <FilePath>..\mainGateway.cpp</FilePath>
             </File>
           </Files>
         </Group>

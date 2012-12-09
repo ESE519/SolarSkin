@@ -1841,10 +1841,10 @@
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>30</ColumnNumber>
+      <ColumnNumber>41</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>110</TopLine>
-      <CurrentLine>244</CurrentLine>
+      <TopLine>109</TopLine>
+      <CurrentLine>242</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\hop_int_gate.cpp</PathWithFileName>
       <FilenameWithoutPath>hop_int_gate.cpp</FilenameWithoutPath>
