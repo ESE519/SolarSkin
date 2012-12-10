@@ -174,3 +174,44 @@ linking...
 Program Size: Code=32922 RO-data=1546 RW-data=344 ZI-data=4828  
 User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
 ".\build\MRK.axf" - 0 Error(s), 1 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(175): warning:  #550-D: variable "val" was set but never used
+..\mainNode.cpp(412): warning:  #1441-D: nonstandard cast on lvalue
+..\mainNode.cpp(552): warning:  #1-D: last line of file ends without a newline
+linking...
+Program Size: Code=33870 RO-data=1546 RW-data=372 ZI-data=4672  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 3 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(175): warning:  #550-D: variable "val" was set but never used
+..\mainNode.cpp(408): warning:  #1441-D: nonstandard cast on lvalue
+..\mainNode.cpp(548): warning:  #1-D: last line of file ends without a newline
+linking...
+Program Size: Code=33846 RO-data=1546 RW-data=368 ZI-data=4672  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 3 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(407): warning:  #1441-D: nonstandard cast on lvalue
+..\mainNode.cpp(547): warning:  #1-D: last line of file ends without a newline
+linking...
+Program Size: Code=33846 RO-data=1546 RW-data=368 ZI-data=4672  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 2 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainNode.cpp...
+..\mainNode.cpp(407): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=33846 RO-data=1546 RW-data=368 ZI-data=4672  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).

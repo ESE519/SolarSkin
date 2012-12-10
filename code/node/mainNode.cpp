@@ -11,8 +11,11 @@
 #include "mbed.h"
 #include "basic_rf.h"
 #include "bmac.h"
+#include <nrk_driver_list.h>
+#include <nrk_driver.h>
+#include <ff_basic_sensor.h>
 
-#define MyOwnAddress 0x02
+#define MyOwnAddress 0x07
 #define MaxHopsPossible 10
 #define TTL 5
 #define MaxuIDTrack 10
@@ -29,16 +32,17 @@
 #define szMax 32
 #define queMax 10
 #define RSSIThresh 180
-#define updateCntMax 4
+#define updateCntMax 10
 #define rDiscCntMax 4
 uint8_t pLen[queMax]={0},ipLen[queMax]={0},apLen[queMax]={0},pDes[queMax]={0},ipDes[queMax]={0},apDes[queMax]={0},pPtr=0,ipPtr=0,apPtr=0;
 uint8_t pDat[queMax][szMax]={0},ipDat[queMax][szMax]={0},apDat[queMax][szMax]={0};
 uint8_t pQue=0,txPtr=0,ipQue=0,itxPtr=0,apQue=0,atxPtr=0;
 uint8_t uniqueIDsRREQ[MaxuIDTrack] = {0}, uniqueIDsRSAL[MaxuIDTrack] = {0};
 uint8_t ackTrack[MaxuIDTrack] = {0}, ackTrackS[MaxuIDTrack] = {0}, ackTrackR[MaxuIDTrack] = {0};
-uint8_t updateCnt=0, rDiscCnt=0;
+uint8_t updateCnt=0, rDiscCnt=0,ack_cnt=0;
 uint8_t cache[MaxHopsPossible] = {0}; //store first as own address
 
+struct __FILE { int handle; };
 void RouteRequestRx(uint8_t *rreq, uint8_t len);
 void RouteRequestTx(uint8_t *rreq,uint8_t len);
 void TxQueueAdd(uint8_t px,uint8_t len,uint8_t dest);
@@ -55,6 +59,7 @@ void DackRx(uint8_t *d, uint8_t len);
 void RsalRx(uint8_t *rsal,uint8_t len);
 void RsalTx(uint8_t *rsal, uint8_t len, uint8_t flag);
 void RsalInitiate(uint8_t dest);
+void nrk_register_drivers();
 
 nrk_task_type RX_TASK;
 NRK_STK rx_task_stack[NRK_APP_STACKSIZE];
@@ -76,7 +81,6 @@ void nrk_create_taskset();
 
 uint8_t tx_buf[RF_MAX_PAYLOAD_SIZE];
 uint8_t itx_buf[RF_MAX_PAYLOAD_SIZE];
-uint8_t atx_buf[RF_MAX_PAYLOAD_SIZE];
 uint8_t rx_buf[RF_MAX_PAYLOAD_SIZE];
 
 int main(void){
@@ -84,6 +88,7 @@ int main(void){
 	nrk_init();
 	bmac_task_config();
 	bmac_init(1);
+	nrk_register_drivers();
 	nrk_create_taskset();
 	nrk_start();
 	return 0;
@@ -139,7 +144,7 @@ void AckTxQueueAdd(uint8_t *px,uint8_t len,uint8_t dest){
 
 void TxQueueAdd(uint8_t *px,uint8_t len,uint8_t dest,uint8_t iFlag){
 	if(iFlag==1){InterTxQueueAdd(px,len,dest);return;}
-	if(iFlag==2){AckTxQueueAdd(px,len,dest);return;}
+	//if(iFlag==2){AckTxQueueAdd(px,len,dest);return;}
 	if(pPtr>9){pPtr=0;}
 	for(int i=0;i<len;i++){pDat[pPtr][i]=px[i];}
 	pDes[pPtr]=dest;
@@ -158,20 +163,35 @@ void DackTx(uint8_t dest){
 	temp[3] = DACK;
 	temp[4] = MyOwnAddress;
 	temp[5] = CRC;
-	TxQueueAdd(temp,6,dest,2);
+	TxQueueAdd(temp,6,dest,1);
 }
 void DackRx(uint8_t *d, uint8_t len){
 	uint8_t i;
 	for(i=0;i<MaxuIDTrack;i++){if(d[1]==ackTrackS[i]){ackTrackR[i]=d[1];}}	
 }
+
+void nrk_register_drivers()
+{
+    nrk_register_driver( &dev_manager_ff_sensors,FIREFLY_SENSOR_BASIC);
+}
 void DataInitiate(){
 	uint8_t i,j;
+	uint8_t buf[2],fd;
 	for(i=0;i<MaxHopsPossible;i++){if(cache[i] == Gateway){break;}}
 	uint8_t temp[szMax];
 	temp[0]=TTL+1;
 	for(j=1;j<i+2;j++){temp[j]=cache[j-1];}
-	temp[j++]=0xFF;
-	temp[j]=0xFE;
+  fd=nrk_open(FIREFLY_SENSOR_BASIC,READ);
+  //wait_ms(1);
+  nrk_set_status(fd, SENSOR_SELECT, TEMP);
+	nrk_read(fd, &buf[0], 2);
+  temp[j++] = buf[1];
+	temp[j++] = buf[0];
+	nrk_set_status(fd, SENSOR_SELECT, LIGHT);
+	nrk_read(fd, &buf[0], 2);
+  temp[j++] = buf[1];
+  temp[j] = buf[0];
+	nrk_close(fd);
 	DataTx(temp,i+4,0);
 }
 void DataTx(uint8_t *data,uint8_t len,uint8_t flag){
@@ -195,7 +215,15 @@ void DataRx(uint8_t *data, uint8_t len){
 	uint8_t i,j ;
 	for(i=2;i<len;i++){if(data[i]==MyOwnAddress){break;}}
 	for(j=2;j<len;j++){if(data[j]==Gateway){break;}}
-	DackTx(data[i-1]);
+if(ack_cnt>4)
+{
+DackTx(data[i-1]);
+ack_cnt++;
+  if(ack_cnt>8){
+	ack_cnt=0;
+	}
+}
+else {ack_cnt++;}
 	if(i>1 && i<j){DataTx(data,len,1);}
 	return;
 }
@@ -225,7 +253,7 @@ void RouteRequestRx(uint8_t *rreq, uint8_t len){
 	rrDest  = rreq + 1 ;
 
 	//Check if the unique ID packet has already been seen recently.
-	
+
 	for(i=0;i<MaxuIDTrack;i++)
 	{
 		if(*uID == uniqueIDsRREQ[i]){return;}
@@ -245,7 +273,7 @@ void RouteRequestRx(uint8_t *rreq, uint8_t len){
 		return;
 	}
 	//Check for the cache to the destination existence 
-	
+
 	for(i=0;i<MaxHopsPossible;i++)
 	{
 		if(*rrDest == cache[i])
@@ -266,7 +294,7 @@ void RouteReplyRx(uint8_t *rrep, uint8_t len){
 	i=1;
 	while(rrep[i] != MyOwnAddress){i++;}
 	if(i>1){RouteReplyTx(rrep,len,0);}
-	
+
 	if(cache[0]==0)
 	{	
 		for(j=0;j<len-1;j++){cache[j]=rrep[i];i++;}
@@ -344,7 +372,7 @@ void RsalRx(uint8_t *rsal,uint8_t len){
 	{
 		if(uniqueIDsRSAL[i]==0){uniqueIDsRSAL[i]=rsal[1];break;}
 	}
-	RsalTx(rsal,len,2);
+	RsalTx(rsal,len,1);
 	return;
 }
 void RsalTx(uint8_t *rsal, uint8_t len, uint8_t flag){
@@ -365,7 +393,7 @@ void RsalInitiate(uint8_t dest){
 	temp[0]=TTL+1;
 	temp[1]=MyOwnAddress;
 	temp[2]=dest;
-	RsalTx(temp,3,2);
+	RsalTx(temp,3,1);
 }
 void rx_task(){
   uint8_t i, len, rssi, *local_rx_buf;
@@ -401,7 +429,7 @@ void inter_tx_task (){
 			bmac_addr_decode_enable();
 			bmac_addr_decode_set_my_mac(MyOwnAddress);
 			nrk_led_set(BLUE_LED);
-			//bmac_auto_ack_enable();
+		  bmac_auto_ack_disable();
 			for(i=0;i<ipLen[itxPtr];i++){itx_buf[i]=ipDat[itxPtr][i];}
 			if(ipDes[itxPtr]==0xFF){bmac_addr_decode_dest_mac(0xFFFF);}
 			else{bmac_addr_decode_dest_mac(ipDes[itxPtr]);}
@@ -409,33 +437,6 @@ void inter_tx_task (){
 			ipQue--;
 			itxPtr++;
 			nrk_led_clr(BLUE_LED);
-		}  
-		nrk_wait_until_next_period ();
-  }
-}
-void ack_tx_task(){
-	uint8_t i;
-  nrk_sig_t tx_done_signal;
-  while (!bmac_started ())
-  nrk_wait_until_next_period ();
-  tx_done_signal = bmac_get_tx_done_signal ();
-  nrk_signal_register (tx_done_signal);
-	bmac_addr_decode_enable();
-  bmac_addr_decode_set_my_mac(MyOwnAddress);
-  while (1) {
-		if(apQue>0){
-			if(atxPtr>queMax-1){atxPtr=0;}
-			bmac_addr_decode_enable();
-			bmac_addr_decode_set_my_mac(MyOwnAddress);
-			nrk_led_set(GREEN_LED);
-			//bmac_auto_ack_enable();
-			for(i=0;i<apLen[atxPtr];i++){atx_buf[i]=apDat[atxPtr][i];}
-			if(apDes[atxPtr]==0xFF){bmac_addr_decode_dest_mac(0xFFFF);}
-			else{bmac_addr_decode_dest_mac(apDes[atxPtr]);}
-			bmac_tx_pkt((char*)atx_buf,apLen[atxPtr]);
-			apQue--;
-			atxPtr++;
-			nrk_led_clr(GREEN_LED);
 		}  
 		nrk_wait_until_next_period ();
   }
@@ -485,7 +486,7 @@ void tx_task (){
 			bmac_addr_decode_enable();
 			bmac_addr_decode_set_my_mac(MyOwnAddress);
 			nrk_led_set(GREEN_LED);
-			//bmac_auto_ack_enable();
+			bmac_auto_ack_disable();
 			for(i=0;i<pLen[txPtr];i++){tx_buf[i]=pDat[txPtr][i];}
 			if(pDes[txPtr]==0xFF){bmac_addr_decode_dest_mac(0xFFFF);}
 			else{bmac_addr_decode_dest_mac(pDes[txPtr]);}
@@ -521,39 +522,26 @@ void nrk_create_taskset (){
   TX_TASK.FirstActivation = TRUE;
   TX_TASK.Type = BASIC_TASK;
   TX_TASK.SchType = PREEMPTIVE;
-  TX_TASK.period.secs = 5;
+  TX_TASK.period.secs = 8;
   TX_TASK.period.nano_secs = 1 * NANOS_PER_MS;
-  TX_TASK.cpu_reserve.secs = 1;
+  TX_TASK.cpu_reserve.secs = 2;
   TX_TASK.cpu_reserve.nano_secs = 500 * NANOS_PER_MS;
   TX_TASK.offset.secs = 0;
   TX_TASK.offset.nano_secs = 0;
   nrk_activate_task (&TX_TASK);
-	
+
 	INTER_TX_TASK.task = inter_tx_task;
   nrk_task_set_stk( &INTER_TX_TASK, inter_tx_task_stack, NRK_APP_STACKSIZE);
   INTER_TX_TASK.prio = 2;
   INTER_TX_TASK.FirstActivation = TRUE;
   INTER_TX_TASK.Type = BASIC_TASK;
   INTER_TX_TASK.SchType = PREEMPTIVE;
-  INTER_TX_TASK.period.secs = 1;
+  INTER_TX_TASK.period.secs = 3;
   INTER_TX_TASK.period.nano_secs = 450 * NANOS_PER_MS;
-  INTER_TX_TASK.cpu_reserve.secs = 1;
+  INTER_TX_TASK.cpu_reserve.secs = 2;
   INTER_TX_TASK.cpu_reserve.nano_secs = 500 * NANOS_PER_MS;
   INTER_TX_TASK.offset.secs = 0;
   INTER_TX_TASK.offset.nano_secs = 0;
   nrk_activate_task (&INTER_TX_TASK);
-	
-	ACK_TX_TASK.task = ack_tx_task;
-  nrk_task_set_stk( &ACK_TX_TASK, inter_tx_task_stack, NRK_APP_STACKSIZE);
-  ACK_TX_TASK.prio = 2;
-  ACK_TX_TASK.FirstActivation = TRUE;
-  ACK_TX_TASK.Type = BASIC_TASK;
-  ACK_TX_TASK.SchType = PREEMPTIVE;
-  ACK_TX_TASK.period.secs = 1;
-  ACK_TX_TASK.period.nano_secs = 450 * NANOS_PER_MS;
-  ACK_TX_TASK.cpu_reserve.secs = 1;
-  ACK_TX_TASK.cpu_reserve.nano_secs = 500 * NANOS_PER_MS;
-  ACK_TX_TASK.offset.secs = 0;
-  ACK_TX_TASK.offset.nano_secs = 0;
-  //nrk_activate_task (&ACK_TX_TASK);
+
 }

@@ -71,3 +71,6 @@
 .\build\mainnode.o: .\mbed\basic_rf.h
 .\build\mainnode.o: .\mbed\MRF24J40.h
 .\build\mainnode.o: .\mbed\bmac.h
+.\build\mainnode.o: .\mbed\nrk_driver_list.h
+.\build\mainnode.o: .\mbed\nrk_driver.h
+.\build\mainnode.o: .\mbed\ff_basic_sensor.h

@@ -4,6 +4,56 @@
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
 C:\Users\Neel\Dropbox\ese519\SolarSkin\code\gateway\mRKv2.0\MRK.uvproj
-Project File Date:  12/07/2012
+Project File Date:  12/09/2012
 
 <h2>Output:</h2>
+Build target 'mbed NXP LPC1768'
+compiling mainGateway.cpp...
+..\mainGateway.cpp(185): warning:  #177-D: variable "k" was declared but never referenced
+..\mainGateway.cpp(223): warning:  #1441-D: nonstandard cast on lvalue
+..\mainGateway.cpp(214): warning:  #550-D: variable "val" was set but never used
+..\mainGateway.cpp(237): warning:  #177-D: variable "j" was declared but never referenced
+..\mainGateway.cpp(237): warning:  #550-D: variable "val" was set but never used
+..\mainGateway.cpp(237): warning:  #177-D: variable "len" was declared but never referenced
+..\mainGateway.cpp(239): warning:  #177-D: variable "ret" was declared but never referenced
+..\mainGateway.cpp(240): warning:  #177-D: variable "r_period" was declared but never referenced
+..\mainGateway.cpp(314): warning:  #1-D: last line of file ends without a newline
+..\mainGateway.cpp(105): warning: C3017W: i may be used before being set
+linking...
+Program Size: Code=31270 RO-data=1546 RW-data=340 ZI-data=4240  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 10 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainGateway.cpp...
+..\mainGateway.cpp(223): warning:  #1441-D: nonstandard cast on lvalue
+..\mainGateway.cpp(214): warning:  #550-D: variable "val" was set but never used
+..\mainGateway.cpp(237): warning:  #550-D: variable "val" was set but never used
+..\mainGateway.cpp(105): warning: C3017W: i may be used before being set
+linking...
+Program Size: Code=31270 RO-data=1546 RW-data=340 ZI-data=4240  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 4 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainGateway.cpp...
+..\mainGateway.cpp(223): warning:  #1441-D: nonstandard cast on lvalue
+..\mainGateway.cpp(214): warning:  #550-D: variable "val" was set but never used
+..\mainGateway.cpp(237): warning:  #550-D: variable "val" was set but never used
+linking...
+Program Size: Code=31266 RO-data=1546 RW-data=340 ZI-data=4240  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 3 Warning(s).
+Build target 'mbed NXP LPC1768'
+compiling mainGateway.cpp...
+..\mainGateway.cpp(220): warning:  #1441-D: nonstandard cast on lvalue
+linking...
+Program Size: Code=31266 RO-data=1546 RW-data=340 ZI-data=4240  
+User command #1: fromelf --bin -o F:\MRK.bin .\build\MRK.axf
+Error: Q0108E: Could not create output file 'F:\MRK.bin': No such file or directory
+Finished: 0 information, 0 warning and 1 error messages.
+".\build\MRK.axf" - 0 Error(s), 1 Warning(s).

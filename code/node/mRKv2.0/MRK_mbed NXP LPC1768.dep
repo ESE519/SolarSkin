@@ -1359,7 +1359,7 @@ I (.\mbed\nrk_events.h)(0x5094976E)
 I (.\mbed\nrk_platform_time.h)(0x5094976E)
 I (.\mbed\nrk_task.h)(0x5094976E)
 I (C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h)(0x4EB17B48)
-F (..\mainNode.cpp)(0x50C58E36)(--cpp -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I.\mbed -I.\mbed\LPC1768 -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\NXP\LPC17xx -DTARGET_LPC1768 -o ".\build\mainnode.o" --omf_browse ".\build\mainnode.crf" --depend ".\build\mainnode.d")
+F (..\mainNode.cpp)(0x50C5D164)(--cpp -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I.\mbed -I.\mbed\LPC1768 -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\NXP\LPC17xx -DTARGET_LPC1768 -o ".\build\mainnode.o" --omf_browse ".\build\mainnode.crf" --depend ".\build\mainnode.d")
 I (.\mbed\nrk.h)(0x5094976E)
 I (.\mbed\nrk_cpu.h)(0x5094976E)
 I (C:\Keil\ARM\ARMCC\bin\..\include\stdint.h)(0x4EB17B44)
@@ -1428,3 +1428,6 @@ I (.\mbed\nrk_stats.h)(0x5094976E)
 I (.\mbed\basic_rf.h)(0x5094976E)
 I (.\mbed\MRF24J40.h)(0x5094976E)
 I (.\mbed\bmac.h)(0x5094976E)
+I (.\mbed\nrk_driver_list.h)(0x5094976E)
+I (.\mbed\nrk_driver.h)(0x5094976E)
+I (.\mbed\ff_basic_sensor.h)(0x5094976E)
