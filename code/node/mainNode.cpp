@@ -144,7 +144,6 @@ void AckTxQueueAdd(uint8_t *px,uint8_t len,uint8_t dest){
 
 void TxQueueAdd(uint8_t *px,uint8_t len,uint8_t dest,uint8_t iFlag){
 	if(iFlag==1){InterTxQueueAdd(px,len,dest);return;}
-	//if(iFlag==2){AckTxQueueAdd(px,len,dest);return;}
 	if(pPtr>9){pPtr=0;}
 	for(int i=0;i<len;i++){pDat[pPtr][i]=px[i];}
 	pDes[pPtr]=dest;
