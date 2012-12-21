@@ -1,6 +1,11 @@
 Project SolarSkin
 Team: Amey Pendharkar, Miraj Shah, Neel S Shah
 
+Final Video Links
+1. http://www.youtube.com/watch?v=wjxvmUaf5Q0
+2. http://www.youtube.com/watch?v=PzuQBJTAVmc
+
+
 Getting Started
 1. Gateway code is under the gateway directory. (Keil project)
 2. Node code is under the node directory. (Keil Project) 
@@ -18,4 +23,6 @@ setenv('PATH',[getenv('PATH'),pathsep(),'C:/Program Files/graphviz 2.8/bin');
 See the dynamic update of the connectivity graph of the network. 
 
 To see the temperature and light readings just double click the corresponding node and it will show the readings. 
+ 
+ 
  
