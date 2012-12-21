@@ -40,7 +40,7 @@
 ### ADS-LD Output File: '.\build\MRK.axf'
 ### ADS-LD Command File: '.\build\MRK.lnp'
 ### Checking for dirty Components...
-### Creating CmdFile '.\build\MRK.lnp', Handle=0x000001E4
+### Creating CmdFile '.\build\MRK.lnp', Handle=0x000001E0
 ### Writing '.lnp' file
 ### ADS-LD Command file '.\build\MRK.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.

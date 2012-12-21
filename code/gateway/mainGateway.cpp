@@ -102,9 +102,9 @@ void DackTx(uint8_t dest){
 	TxQueueAdd(temp,6,dest);
 }
 void DataRx(uint8_t *data, uint8_t len){
-	uint8_t j;
+	uint8_t i,j ;
 	for(j=2;j<len;j++){if(data[j]==Gateway){break;}}
-	DackTx(data[j-1]);
+	DackTx(data[i-1]);
 	return;
 }
 void TxQueueAdd(uint8_t *px,uint8_t len,uint8_t dest){
@@ -182,7 +182,7 @@ void RouteRequestRx(uint8_t *rreq, uint8_t len){
 	return;
 }
 void RouteReplyRx(uint8_t *rrep, uint8_t len){
-	uint8_t i,j ;
+	uint8_t i,j,k ;
 	i=1;
 	while(rrep[i] != MyOwnAddress){i++;}
 	if(i>1){RouteReplyTx(rrep,len,0);}
@@ -206,23 +206,43 @@ void RouteReplyTx(uint8_t *rrep,uint8_t len, uint8_t timeOff){
 	return;
 }
 
-
+void RouteDiscovery(void){
+	uint8_t temp[2];
+	temp[0]=TTL+1;
+	temp[1]=Gateway;
+	RouteRequestTx(temp,2);
+	return;
+}
 
 void rx_task ()
 {
   uint8_t i, len, rssi;
+  int8_t val;
+	//char *local_rx_buf;
+  nrk_time_t check_period;
+	
+  //printf ("rx_task PID=%d\r\n", nrk_get_pid ());
 	bmac_set_cca_thresh(DEFAULT_BMAC_CCA); 
   bmac_rx_pkt_set_buffer ((char*)rx_buf, RF_MAX_PAYLOAD_SIZE);
   while (1) {
     // Wait until an RX packet is received
-    bmac_wait_until_rx_pkt ();
+    val = bmac_wait_until_rx_pkt ();
+		//printf("Hi..\n");
+    // Get the RX packet
+		
     nrk_led_set (ORANGE_LED);
     (char*)local_rx_buf = bmac_rx_pkt_get (&len, &rssi);
-	for(i=0;i<len;i++){
-	printf("%c",local_rx_buf[i]);
-	}
-	RxPacketProcess(local_rx_buf,len);
+
+		
+		if(len>0){
+			if(local_rx_buf[3]==DATA){
+				for(i=4;i<len-1;i++){putchar(local_rx_buf[i]);}putchar(0x0D);putchar(0x0A);
+			}
+		}
+			RxPacketProcess(local_rx_buf,len);
+
 	nrk_led_clr (ORANGE_LED);
+
     bmac_rx_pkt_release ();
     nrk_wait_until_next_period ();
   }
@@ -231,18 +251,18 @@ void rx_task ()
 
 void tx_task ()
 {
-  uint8_t  i, cnt;
+  uint8_t j, i, val, len, cnt;
   nrk_sig_t tx_done_signal;
+  nrk_sig_mask_t ret;
+  nrk_time_t r_period;
   while (!bmac_started ())
   nrk_wait_until_next_period ();
   tx_done_signal = bmac_get_tx_done_signal ();
   nrk_signal_register (tx_done_signal);
   cnt = 0;
   while (1) {
-	nrk_gpio_set(DEBUG_0);
-		if(packet_in_que>0){
+	if(packet_in_que>0){
 		//RouteDiscovery();
-		
 		if(trans_ptr>max_storage-1){
 			trans_ptr=0;}
     bmac_addr_decode_enable();
@@ -259,14 +279,15 @@ void tx_task ()
 	else{
 	bmac_addr_decode_dest_mac(pkt_destination[trans_ptr]);
 	}
-    bmac_tx_pkt((char*)tx_buf,pkt_length[trans_ptr] );
+    val=bmac_tx_pkt((char*)tx_buf,pkt_length[trans_ptr] );
 	
 	packet_in_que--;
 	trans_ptr++;
 	cnt++;
+    //printf("Tx task sent data!\r\n");
     nrk_led_clr (GREEN_LED);
+	//printf("tx_task PID=%d\r\n", nrk_get_pid ());
 }  
- nrk_gpio_clr(DEBUG_0);
   nrk_wait_until_next_period ();
   
   }
